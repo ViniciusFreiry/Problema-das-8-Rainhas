@@ -1,4 +1,4 @@
-# 8 Queens Problem with Random Restart
+# Problema das 8 Rainhas com Random Restart e Hill Climbing
 
 Este projeto implementa uma solução para o **Problema das 8 Rainhas** utilizando o algoritmo de **Random Restart**. O programa é uma simulação gráfica que mostra o tabuleiro de xadrez 8x8 com 8 rainhas posicionadas de maneira que nenhuma rainha ataque outra. O usuário pode clicar em um botão para gerar novas soluções aleatórias a cada vez.
 
@@ -21,3 +21,8 @@ Se você ainda não tem o **Pygame** instalado, você pode instalá-lo com o seg
 
 ```bash
 pip install pygame
+```
+
+### Autores
+
+Feito por Vinícius Freiry e Henrique Duarte
