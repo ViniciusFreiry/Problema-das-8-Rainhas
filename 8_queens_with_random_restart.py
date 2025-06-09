@@ -26,9 +26,12 @@ def gerar_solucao_aleatoria():
 
 # Função para tentar encontrar uma solução válida com Random Restart
 def random_restart():
+    tentativas = 0
     while True:
+        tentativas += 1
         solucao = gerar_solucao_aleatoria()
         if eh_valida(solucao):
+            print(f"Número de tentativas até solução válida: {tentativas}")
             return solucao
 
 # Inicia o Pygame
