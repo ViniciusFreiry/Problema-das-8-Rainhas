@@ -33,10 +33,13 @@ def contar_conflitos(solucao):
 # Hill Climbing para encontrar uma solução
 def hill_climbing():
     estado_atual = [random.randint(0, NUM_RAINHAS - 1) for _ in range(NUM_RAINHAS)]
+    passos = 0  # Conta o número de movimentos avaliados
+
     while True:
         conflitos_atual = contar_conflitos(estado_atual)
         if conflitos_atual == 0:
-            return estado_atual  # Solução encontrada
+            print(f"Passos até solução: {passos}")
+            return estado_atual
 
         melhor_estado = list(estado_atual)
         melhor_conflitos = conflitos_atual
@@ -47,14 +50,16 @@ def hill_climbing():
                 if linha == original:
                     continue
                 estado_atual[coluna] = linha
+                passos += 1
                 novos_conflitos = contar_conflitos(estado_atual)
                 if novos_conflitos < melhor_conflitos:
                     melhor_conflitos = novos_conflitos
                     melhor_estado = list(estado_atual)
-            estado_atual[coluna] = original  # Restaura a posição original
+            estado_atual[coluna] = original
 
         if melhor_conflitos >= conflitos_atual:
-            return estado_atual  # Ótimo local atingido
+            print(f"Passos até ótimo local: {passos}")
+            return estado_atual
         estado_atual = melhor_estado
 
 # Funções de desenho
