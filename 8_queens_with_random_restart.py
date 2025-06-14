@@ -3,14 +3,17 @@ import sys
 import random
 import tracemalloc
 import time
+from itertools import permutations
 
 # Configurações
 TAM_CELULA = 60  # Tamanho de cada célula do tabuleiro
 NUM_RAINHAS = 8
 LARGURA = TAM_CELULA * NUM_RAINHAS
-ALTURA = TAM_CELULA * NUM_RAINHAS + 45  # Damos espaço extra para o botão
+ALTURA = TAM_CELULA * NUM_RAINHAS + 100 # Espaço extra para os dos botões
 LARGURA_BOTAO = 60 * 8
 ALTURA_BOTAO = 45
+LARGURA_BOTAO_92_SOLUCOES = 60 * 8
+ALTURA_BOTAO_92_SOLUCOES = 45
 
 # Função para verificar se uma solução é válida
 def eh_valida(solucao):
@@ -67,12 +70,21 @@ def desenhar_rainhas(solucao):
         radius = TAM_CELULA // 3
         pygame.draw.circle(screen, VERMELHO, (center_x, center_y), radius)
 
-# Função para desenhar o botão
+# Função para desenhar os botões
 def desenhar_botao():
+    font = pygame.font.Font(None, 36)
+
+    # Botão de uma Solução
+    botao_rect = pygame.Rect(LARGURA // 2 - LARGURA_BOTAO // 2, ALTURA - (ALTURA_BOTAO * 2 + 10), LARGURA_BOTAO, ALTURA_BOTAO)
+    pygame.draw.rect(screen, AZUL, botao_rect)
+    texto = font.render("Nova Solução", True, BRANCO)
+    screen.blit(texto, (botao_rect.x + (botao_rect.width - texto.get_width()) // 2, 
+                        botao_rect.y + (botao_rect.height - texto.get_height()) // 2))
+
+    # Botão para calculo de tempo das 92 soluções
     botao_rect = pygame.Rect(LARGURA // 2 - LARGURA_BOTAO // 2, ALTURA - ALTURA_BOTAO, LARGURA_BOTAO, ALTURA_BOTAO)
     pygame.draw.rect(screen, AZUL, botao_rect)
-    font = pygame.font.Font(None, 36)
-    texto = font.render("Nova Solução", True, BRANCO)
+    texto = font.render("Tempo das 92 Soluções", True, BRANCO)
     screen.blit(texto, (botao_rect.x + (botao_rect.width - texto.get_width()) // 2, 
                         botao_rect.y + (botao_rect.height - texto.get_height()) // 2))
 
@@ -102,7 +114,7 @@ def main():
             # Detectando clique no botão
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = event.pos
-                botao_rect = pygame.Rect(LARGURA // 2 - LARGURA_BOTAO // 2, ALTURA - ALTURA_BOTAO, LARGURA_BOTAO, ALTURA_BOTAO)
+                botao_rect = pygame.Rect(LARGURA // 2 - LARGURA_BOTAO // 2, ALTURA - (ALTURA_BOTAO * 2 + 10), LARGURA_BOTAO, ALTURA_BOTAO)
                 if botao_rect.collidepoint(mouse_x, mouse_y):
                     # Tempo de Execução (1 solução)
                     tempo_inicio = time.time()
@@ -112,6 +124,17 @@ def main():
 
                     memoria_usada = tracemalloc.get_traced_memory()[1] / 1024  # em KB
                     print(f"Memória usada: {memoria_usada:.2f} KB")
+                
+                botao_rect = pygame.Rect(LARGURA // 2 - LARGURA_BOTAO // 2, ALTURA - ALTURA_BOTAO, LARGURA_BOTAO, ALTURA_BOTAO)
+                if botao_rect.collidepoint(mouse_x, mouse_y):
+                    # Tempo de Execução (92 soluções)
+                    tempo_inicio = time.time()
+                    todas = list(permutations(range(8)))
+                    validas = [s for s in todas if eh_valida(s)]
+                    tempo_fim = time.time()
+
+                    print(f"Número de soluções válidas: {len(validas)}")  # Deve imprimir 92
+                    print(f"Tempo para achar as 92 soluções: {(tempo_fim - tempo_inicio) * 1000:.4f} milisegundos")
 
         tracemalloc.stop()
 
