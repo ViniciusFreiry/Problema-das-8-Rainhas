@@ -1,6 +1,7 @@
 import pygame
 import sys
 import random
+import tracemalloc
 
 # Configurações
 TAM_CELULA = 60  # Tamanho de cada célula do tabuleiro
@@ -37,7 +38,7 @@ def random_restart():
 # Inicia o Pygame
 pygame.init()
 screen = pygame.display.set_mode((LARGURA, ALTURA))
-pygame.display.set_caption("Problema das 8 Rainhas")
+pygame.display.set_caption("8 Rainhas - Random Restart")
 
 # Cores
 BRANCO = (255, 255, 255)
@@ -45,9 +46,6 @@ PRETO = (0, 0, 0)
 VERMELHO = (255, 0, 0)
 AZUL = (0, 0, 255)
 CINZA = (200, 200, 200)
-
-# Gera uma solução válida usando Random Restart
-solucao = random_restart()
 
 # Função para desenhar o tabuleiro
 def desenhar_tabuleiro():
@@ -61,7 +59,7 @@ def desenhar_tabuleiro():
             pygame.draw.rect(screen, cor, rect)
 
 # Função para desenhar as rainhas
-def desenhar_rainhas():
+def desenhar_rainhas(solucao):
     for coluna, linha in enumerate(solucao):
         center_x = coluna * TAM_CELULA + TAM_CELULA // 2
         center_y = linha * TAM_CELULA + TAM_CELULA // 2
@@ -79,10 +77,16 @@ def desenhar_botao():
 
 # Função principal para rodar o Pygame
 def main():
-    global solucao
+    tracemalloc.start()
+    solucao = random_restart()
     clock = pygame.time.Clock()
+    memoria_usada = tracemalloc.get_traced_memory()[1] / 1024  # em KB
+    print(f"Memória usada: {memoria_usada:.2f} KB")
+    tracemalloc.stop()
     
     while True:
+        tracemalloc.start()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -95,12 +99,15 @@ def main():
                 if botao_rect.collidepoint(mouse_x, mouse_y):
                     # Gerar uma nova solução aleatória
                     solucao = random_restart()
+                    memoria_usada = tracemalloc.get_traced_memory()[1] / 1024  # em KB
+                    print(f"Memória usada: {memoria_usada:.2f} KB")
 
+        tracemalloc.stop()
+        
         # Desenhar tabuleiro e rainhas
         desenhar_tabuleiro()
-        desenhar_rainhas()
+        desenhar_rainhas(solucao)
         desenhar_botao()
-        
         pygame.display.flip()
         clock.tick(60)
 

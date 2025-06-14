@@ -1,6 +1,7 @@
 import pygame
 import sys
 import random
+import tracemalloc
 
 # Configurações
 TAM_CELULA = 60
@@ -86,10 +87,16 @@ def desenhar_botao():
 
 # Loop principal
 def main():
+    tracemalloc.start()
     solucao = hill_climbing()
     clock = pygame.time.Clock()
+    memoria_usada = tracemalloc.get_traced_memory()[1] / 1024  # em KB
+    print(f"Memória usada: {memoria_usada:.2f} KB")
+    tracemalloc.stop()
 
     while True:
+        tracemalloc.start()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -99,8 +106,12 @@ def main():
                 botao_rect = pygame.Rect(LARGURA // 2 - LARGURA_BOTAO // 2, ALTURA - ALTURA_BOTAO, LARGURA_BOTAO, ALTURA_BOTAO)
                 if botao_rect.collidepoint(mouse_x, mouse_y):
                     solucao = hill_climbing()
+                    memoria_usada = tracemalloc.get_traced_memory()[1] / 1024  # em KB
+                    print(f"Memória usada: {memoria_usada:.2f} KB")
 
-        screen.fill(BRANCO)
+        tracemalloc.stop()
+
+        # Desenhar tabuleiro e rainhas
         desenhar_tabuleiro()
         desenhar_rainhas(solucao)
         desenhar_botao()
