@@ -2,6 +2,7 @@ import pygame
 import sys
 import random
 import tracemalloc
+import time
 
 # Configurações
 TAM_CELULA = 60  # Tamanho de cada célula do tabuleiro
@@ -78,7 +79,13 @@ def desenhar_botao():
 # Função principal para rodar o Pygame
 def main():
     tracemalloc.start()
+
+    # Tempo de Execução (1 solução)
+    tempo_inicio = time.time()
     solucao = random_restart()
+    tempo_fim = time.time()
+    print(f"Tempo para solução: {(tempo_fim - tempo_inicio) * 1000:.4f} milisegundos")
+
     clock = pygame.time.Clock()
     memoria_usada = tracemalloc.get_traced_memory()[1] / 1024  # em KB
     print(f"Memória usada: {memoria_usada:.2f} KB")
@@ -97,13 +104,17 @@ def main():
                 mouse_x, mouse_y = event.pos
                 botao_rect = pygame.Rect(LARGURA // 2 - LARGURA_BOTAO // 2, ALTURA - ALTURA_BOTAO, LARGURA_BOTAO, ALTURA_BOTAO)
                 if botao_rect.collidepoint(mouse_x, mouse_y):
-                    # Gerar uma nova solução aleatória
+                    # Tempo de Execução (1 solução)
+                    tempo_inicio = time.time()
                     solucao = random_restart()
+                    tempo_fim = time.time()
+                    print(f"Tempo para solução: {(tempo_fim - tempo_inicio) * 1000:.4f} milisegundos")
+
                     memoria_usada = tracemalloc.get_traced_memory()[1] / 1024  # em KB
                     print(f"Memória usada: {memoria_usada:.2f} KB")
 
         tracemalloc.stop()
-        
+
         # Desenhar tabuleiro e rainhas
         desenhar_tabuleiro()
         desenhar_rainhas(solucao)
