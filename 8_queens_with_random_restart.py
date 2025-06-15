@@ -12,8 +12,6 @@ LARGURA = TAM_CELULA * NUM_RAINHAS
 ALTURA = TAM_CELULA * NUM_RAINHAS + 100 # Espaço extra para os dos botões
 LARGURA_BOTAO = 60 * 8
 ALTURA_BOTAO = 45
-LARGURA_BOTAO_92_SOLUCOES = 60 * 8
-ALTURA_BOTAO_92_SOLUCOES = 45
 
 # Função para verificar se uma solução é válida
 def eh_valida(solucao):
@@ -134,7 +132,7 @@ def main():
                     tempo_fim = time.time()
 
                     print(f"Número de soluções válidas: {len(validas)}")  # Deve imprimir 92
-                    print(f"Tempo para achar as 92 soluções: {(tempo_fim - tempo_inicio) * 1000:.4f} milisegundos")
+                    print(f"Tempo para achar as {len(validas)} soluções: {(tempo_fim - tempo_inicio) * 1000:.4f} milisegundos")
 
         tracemalloc.stop()
 
